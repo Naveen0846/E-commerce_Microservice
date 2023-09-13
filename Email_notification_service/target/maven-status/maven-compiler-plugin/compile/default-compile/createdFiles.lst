@@ -1,0 +1,6 @@
+com\microservice\notification\model\EmailDetails.class
+com\microservice\notification\repository\EmailDAO.class
+com\microservice\notification\model\OrderStatusType.class
+com\microservice\notification\serviceImpl\EmailServiceImpl.class
+com\microservice\notification\NotificationServiceApplication.class
+com\microservice\notification\controller\EmailController.class

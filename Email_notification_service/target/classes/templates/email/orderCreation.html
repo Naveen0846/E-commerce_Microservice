@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+</head>
+
+<body>
+	<p>
+		Welcome <b th:text="${requestVo.displayName}"></b>
+	</p>
+	<p>
+		Your order was successfully placed.your order details is mentioned below:
+	</p>
+
+	<table>
+		<tr>
+			<td>Order Name :</td>
+			<td><b th:text="${requestVo.orderName}"></b></td>
+		</tr>
+		<tr>
+			<td>Order Status :</td>
+			<td><b th:text="${requestVo.orderStatus}"></b></td>
+		</tr>
+		</tr>
+		<tr>
+			<td>Order Price :</td>
+			<td><b th:text="${requestVo.amount}"></b></td>
+		</tr>
+	</table>
+
+	<br>
+
+	<!--<table cellspacing="0" cellpadding="0">
+		<tr>
+			<td bgcolor="#FBC403"><a href='${loginLink}'
+				style="padding: 8px 12px; border: 2px solid #000; color: #000; text-	decoration: none !important; display: inline-block;">
+					Log In </a></td>
+		</tr>
+	</table>-->
+
+	<p>Please contact us at customer support if you have any further
+		questions.</p>
+
+	<b>ADIGURU Shopping Support</b>
+	<br> Monday - Friday 9am - 8pm Eastern
+	</b>
+	<table cellspacing="0" cellpadding="0">
+		<tr>
+			<td>Ph.No: (000) 689-1025</td>
+		</tr>
+		<br>
+		<tr>
+			<td>Email: shoppingsupport@adiguru.com</td>
+		</tr>
+	</table>
