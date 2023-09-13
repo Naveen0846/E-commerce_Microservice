@@ -38,10 +38,6 @@ public class OrderController extends ResponseBuilder {
 	@PostMapping
 	public ResponseEntity<ResponseVO> placeOrder(@RequestBody OrderVo orderVo) {
 		LOGGER.info("Start of placeOrder API");
-		if (!orderService.placeOrder(orderVo)) {
-			LOGGER.info("placeOrder details FAILED");
-			return buildErrorResponse(ResponseMessage.ORDER_PLACED_FAILED);
-		}
 		LOGGER.info("Map Vo TO Entity");
 		OrderDetails orderDetails = orderService.mapVoToOrder(orderVo);
 		LOGGER.info("Check Product To Place order");
@@ -49,6 +45,10 @@ public class OrderController extends ResponseBuilder {
 		if (productResponse.getStatusCode().equalsIgnoreCase("404 NOT_FOUND")) {
 			LOGGER.info("product details fetching FAILED");
 			return buildErrorResponse(productResponse);
+		}
+		if (!orderService.placeOrder(orderVo)) {
+			LOGGER.info("placeOrder details FAILED");
+			return buildErrorResponse(ResponseMessage.ORDER_PLACED_FAILED);
 		}
 		LOGGER.info("sending Email for order details ");
 		String response = client.sendOrderedEmail(orderDetails);

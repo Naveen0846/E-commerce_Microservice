@@ -77,3 +77,89 @@ b)eureka Client:
 #eureka
 eureka.client.service-url.defaultZone=http://localhost:8761/eureka
 spring.application.name=notification-service
+
+
+-----------------------------------------------------------------------------------------------------------
+->Spring API Gateway:
+1.API Gateway:
+a)Microservices will have multiple instances and applications run on different ports,
+we cannot hardcode/rely on the service names in codebase.
+
+b)To overcome this:
+1.Implementing a component acts as a starting point for any request as API gateway responsible
+for routing the incoming requests to respective services.
+
+->API Gateway Acts as:
+1.Routing based on reqeusts headers
+2.Authentication
+3.Security
+4.Load balancing
+5.SSL Termination.
+
+->Popular Gateway :
+1.APG
+2.Cong API Gateway
+
+->API Gateway Has three main properties:
+1.Route: The basic building block of the gateway. 
+It is defined by an ID, a destination URI, a collection of predicates, and a collection of filters. 
+A route is matched if the aggregate predicate is true.
+
+2.Predicate: This is a Java 8 Function Predicate. 
+The input type is a Spring Framework ServerWebExchange. 
+This lets you match on anything from the HTTP request, such as headers or parameters.
+
+3.Filter: These are instances of GatewayFilter that have been constructed with a specific factory. 
+Here, you can modify requests and responses before or after sending the downstream request.
+
+
+2.Create a maven project and Add speing cloud gateway dependency and Eureka client
+3.Annotate with @EnableEurekaClient and configure the properties of Eureka server in application.properties:
+#eureka
+eureka.client.service-url.defaultZone=http://localhost:8761/eureka
+spring.application.name=api-gateway
+server.port=0
+spring.cloud.gateway.discovery.locator.enabled=true
+spring.cloud.gateway.discovery.locator.lower-case-service-id=true
+
+4.add logging level properties:
+#logging 
+logging.level.root= INFO
+logging.level.org.springframework.cloud.gateway.route.RouteDefinitionRouteLocator= INFO
+logging.level.org.springframework.cloud.gateway= TRACE
+
+#Product service
+spring.cloud.gateway.routes[0].id=product-service
+spring.cloud.gateway.routes[0].uri=lb://product-service
+spring.cloud.gateway.routes[0].predicates[0]=Path=/product/**
+
+#order service
+spring.cloud.gateway.routes[1].id=order-service
+spring.cloud.gateway.routes[1].uri=lb://order-service
+spring.cloud.gateway.routes[1].predicates[0]=Path=/orders/**
+
+#notification service
+spring.cloud.gateway.routes[2].id=notification-service
+spring.cloud.gateway.routes[2].uri=lb://notification-service
+spring.cloud.gateway.routes[2].predicates[0]=Path=/email/**
+
+## Discover Server Route
+spring.cloud.gateway.routes[3].id=discovery-server
+spring.cloud.gateway.routes[3].uri=http://localhost:8761
+spring.cloud.gateway.routes[3].predicates[0]=Path=/eureka/web
+spring.cloud.gateway.routes[3].filters[0]=SetPath=/
+
+## Discover Server Static Resources Route
+spring.cloud.gateway.routes[4].id=discovery-server-static
+spring.cloud.gateway.routes[4].uri=http://localhost:8761
+spring.cloud.gateway.routes[4].predicates[0]=Path=/eureka/**
+
+
+->For services That required to run via API GATEWAY :
+In application.properties do not mention any server.port property.
+for API Gateway registration server.port=0
+
+If server.port=0 , whenever server is reloaded the port number gets updated.
+you can assign a static port number for static gateway API routing.
+
+-----------------------------------------------------------------------------------------------------------
